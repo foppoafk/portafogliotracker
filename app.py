@@ -76,7 +76,7 @@ posizioni = [
     },
     {
         "nome": "WisdomTree Uranium Nuclear",
-        "ticker": "NCLR.MI",
+        "ticker": "WNUC.DE",
         "categoria": "ETF",
         "quantita": 22.0,
         "prezzo_fisso": None,
@@ -94,7 +94,7 @@ posizioni = [
     },
     {
         "nome": "iShares Edge MSCI World",
-        "ticker": "IWVL.AS",
+        "ticker": "IWVL.MI",
         "categoria": "ETF",
         "quantita": 8.0,
         "prezzo_fisso": None,
