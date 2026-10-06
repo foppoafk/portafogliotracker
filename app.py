@@ -11,16 +11,14 @@ st.title("💼 Dashboard Portafoglio Investimenti (Live & Multi-Valuta)")
 st.markdown("Monitoraggio in tempo reale con conversione automatica in Euro.")
 st.markdown("---")
 
-# Recuperiamo il tasso di cambio live EUR/USD per convertire i dollari in euro
+# Recuperiamo il tasso di cambio live EUR/USD
 try:
   eur_usd_rate = float(
       yf.Ticker("EURUSD=X").history(period="1d")["Close"].iloc[-1]
   )
 except:
-  eur_usd_rate = 1.08  # Valore di sicurezza predefinito
+  eur_usd_rate = 1.08
 
-
-# Posizioni con ticker live e indicazione della valuta di origine
 posizioni = [
     {
         "nome": "Fidelity Funds - Global Tech (PAC)",
@@ -137,7 +135,6 @@ dati_tabella = []
 for p in posizioni:
   prezzo_mercato = p["prezzo_fisso"]
 
-  # Se c'è un ticker, scarichiamo il prezzo live da Yahoo Finance
   if p["ticker"]:
     try:
       t = yf.Ticker(p["ticker"])
@@ -150,11 +147,7 @@ for p in posizioni:
   if prezzo_mercato is None:
     prezzo_mercato = 0.0
 
-  # Conversione automatica in Euro se l'asset è in Dollari (USD)
-  if p["valuta"] == "USD" and p["ticker"]:
-    prezzo_in_ euro = prezzo_mercato / eur_usd_rate
-  elif p["valuta"] == "USD" and not p["ticker"]:
-    # Per i beni manuali in USD (es. SpaceX)
+  if p["valuta"] == "USD":
     prezzo_in_euro = prezzo_mercato / eur_usd_rate
   else:
     prezzo_in_euro = prezzo_mercato
@@ -188,7 +181,6 @@ percentuale_profitto_num = (
     else 0
 )
 
-# Metriche principali in alto
 col1, col2, col3 = st.columns(3)
 col1.metric("Valore Totale", f"€ {totale_valore_num:,.1f}")
 col2.metric("Totale Investito", f"€ {totale_investito_num:,.1f}")
