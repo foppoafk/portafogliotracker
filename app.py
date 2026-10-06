@@ -125,7 +125,7 @@ posizioni = [
         "categoria": "Cripto",
         "quantita": 0.0063645,
         "prezzo_fisso": None,
-        "valore_investito_fisso": 355.64,
+        "valore_investito_fisso": 355.73,
         "valuta": "EUR",
     },
 ]
