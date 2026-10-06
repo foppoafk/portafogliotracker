@@ -7,128 +7,159 @@ st.set_page_config(
     page_title="Monitoraggio Portafoglio Live", page_icon="📈", layout="wide"
 )
 
-st.title("💼 Dashboard Portafoglio Investimenti (Live)")
-st.markdown("Monitoraggio in tempo reale con grafici professionali.")
+st.title("💼 Dashboard Portafoglio Investimenti (Live & Multi-Valuta)")
+st.markdown("Monitoraggio in tempo reale con conversione automatica in Euro.")
 st.markdown("---")
 
+# Recuperiamo il tasso di cambio live EUR/USD per convertire i dollari in euro
+try:
+  eur_usd_rate = float(
+      yf.Ticker("EURUSD=X").history(period="1d")["Close"].iloc[-1]
+  )
+except:
+  eur_usd_rate = 1.08  # Valore di sicurezza predefinito
+
+
+# Posizioni con ticker live e indicazione della valuta di origine
 posizioni = [
     {
         "nome": "Fidelity Funds - Global Tech (PAC)",
         "ticker": None,
         "categoria": "Fondo (PAC)",
         "quantita": 27.27,
-        "prezzo_mercato": 78.42,
+        "prezzo_fisso": 78.42,
         "valore_investito_fisso": 1799.94,
+        "valuta": "EUR",
     },
     {
         "nome": "Ferrari NV",
         "ticker": "RACE.MI",
         "categoria": "Azione",
         "quantita": 8.0,
-        "prezzo_mercato": None,
+        "prezzo_fisso": None,
         "valore_investito_fisso": 2332.05,
+        "valuta": "EUR",
     },
     {
         "nome": "Space Exploration Tech",
         "ticker": None,
         "categoria": "Azione",
         "quantita": 14.0,
-        "prezzo_mercato": 152.70,
+        "prezzo_fisso": 152.70,
         "valore_investito_fisso": 2064.95,
+        "valuta": "USD",
     },
     {
         "nome": "Take-Two Interactive",
         "ticker": "TTWO",
         "categoria": "Azione",
         "quantita": 12.738563,
-        "prezzo_mercato": None,
+        "prezzo_fisso": None,
         "valore_investito_fisso": 2221.78,
+        "valuta": "USD",
     },
     {
         "nome": "Vistra Energy",
         "ticker": "VST",
         "categoria": "Azione",
         "quantita": 7.892085,
-        "prezzo_mercato": None,
+        "prezzo_fisso": None,
         "valore_investito_fisso": 1050.00,
+        "valuta": "USD",
     },
     {
         "nome": "ASML Holding N.V.",
         "ticker": "ASML.AS",
         "categoria": "Azione",
         "quantita": 1.374456,
-        "prezzo_mercato": None,
+        "prezzo_fisso": None,
         "valore_investito_fisso": 2100.00,
+        "valuta": "EUR",
     },
     {
         "nome": "WisdomTree Uranium Nuclear",
         "ticker": None,
         "categoria": "ETF",
         "quantita": 22.0,
-        "prezzo_mercato": 43.455,
+        "prezzo_fisso": 43.455,
         "valore_investito_fisso": 1116.97,
+        "valuta": "EUR",
     },
     {
         "nome": "iShares Global Aerospace",
         "ticker": None,
         "categoria": "ETF",
         "quantita": 114.0,
-        "prezzo_mercato": 7.92,
+        "prezzo_fisso": 7.92,
         "valore_investito_fisso": 959.48,
+        "valuta": "EUR",
     },
     {
         "nome": "iShares Edge MSCI World",
         "ticker": None,
         "categoria": "ETF",
         "quantita": 8.0,
-        "prezzo_mercato": 72.36,
+        "prezzo_fisso": 72.36,
         "valore_investito_fisso": 448.98,
+        "valuta": "EUR",
     },
     {
         "nome": "iShares MSCI World",
         "ticker": None,
         "categoria": "ETF",
         "quantita": 5.0,
-        "prezzo_mercato": 94.49,
+        "prezzo_fisso": 94.49,
         "valore_investito_fisso": 408.85,
+        "valuta": "EUR",
     },
     {
         "nome": "Xtrackers MSCI Emerging Markets",
         "ticker": None,
         "categoria": "ETF",
         "quantita": 12.0,
-        "prezzo_mercato": 84.82,
+        "prezzo_fisso": 84.82,
         "valore_investito_fisso": 849.87,
+        "valuta": "EUR",
     },
     {
         "nome": "Bitcoin",
         "ticker": "BTC-USD",
         "categoria": "Cripto",
         "quantita": 0.0063645,
-        "prezzo_mercato": None,
+        "prezzo_fisso": None,
         "valore_investito_fisso": 355.64,
+        "valuta": "USD",
     },
 ]
 
 dati_tabella = []
 
 for p in posizioni:
-  prezzo_attuale = p["prezzo_mercato"]
-  if prezzo_attuale is None and p["ticker"]:
+  prezzo_mercato = p["prezzo_fisso"]
+
+  # Se c'è un ticker, scarichiamo il prezzo live da Yahoo Finance
+  if p["ticker"]:
     try:
       t = yf.Ticker(p["ticker"])
-      todays_data = t.history(period="1d")
-      if not todays_data.empty:
-        prezzo_attuale = float(todays_data["Close"].iloc[-1])
-      else:
-        prezzo_attuale = 0.0
+      hist = t.history(period="1d")
+      if not hist.empty:
+        prezzo_mercato = float(hist["Close"].iloc[-1])
     except:
-      prezzo_attuale = 0.0
+      pass
 
-  if prezzo_attuale is None:
-    prezzo_attuale = 0.0
+  if prezzo_mercato is None:
+    prezzo_mercato = 0.0
 
-  valore_totale = p["quantita"] * prezzo_attuale
+  # Conversione automatica in Euro se l'asset è in Dollari (USD)
+  if p["valuta"] == "USD" and p["ticker"]:
+    prezzo_in_ euro = prezzo_mercato / eur_usd_rate
+  elif p["valuta"] == "USD" and not p["ticker"]:
+    # Per i beni manuali in USD (es. SpaceX)
+    prezzo_in_euro = prezzo_mercato / eur_usd_rate
+  else:
+    prezzo_in_euro = prezzo_mercato
+
+  valore_totale = p["quantita"] * prezzo_in_euro
   investito = p["valore_investito_fisso"]
   profitto = valore_totale - investito
   perc_profitto = (profitto / investito * 100) if investito > 0 else 0
@@ -137,7 +168,7 @@ for p in posizioni:
       "Categoria": p["categoria"],
       "Nome": p["nome"],
       "Quantità": f"{p['quantita']:.1f}",
-      "Prezzo Attuale (€)": f"{prezzo_attuale:.1f}",
+      "Prezzo Attuale (€)": f"{prezzo_in_euro:.1f}",
       "Valore Totale (€)": f"{valore_totale:.1f}",
       "Investito (€)": f"{investito:.1f}",
       "Profitto/Perdita (€)": f"{profitto:.1f}",
@@ -157,6 +188,7 @@ percentuale_profitto_num = (
     else 0
 )
 
+# Metriche principali in alto
 col1, col2, col3 = st.columns(3)
 col1.metric("Valore Totale", f"€ {totale_valore_num:,.1f}")
 col2.metric("Totale Investito", f"€ {totale_investito_num:,.1f}")
