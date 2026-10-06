@@ -121,12 +121,12 @@ posizioni = [
     },
     {
         "nome": "Bitcoin",
-        "ticker": "BTC-USD",
+        "ticker": "BTC-EUR",
         "categoria": "Cripto",
         "quantita": 0.0063645,
         "prezzo_fisso": None,
         "valore_investito_fisso": 355.64,
-        "valuta": "USD",
+        "valuta": "EUR",
     },
 ]
 
