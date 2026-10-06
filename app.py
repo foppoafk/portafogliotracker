@@ -76,7 +76,7 @@ posizioni = [
     },
     {
         "nome": "WisdomTree Uranium Nuclear",
-        "ticker": "NCLR",
+        "ticker": "NCLR.MI",
         "categoria": "ETF",
         "quantita": 22.0,
         "prezzo_fisso": None,
@@ -85,7 +85,7 @@ posizioni = [
     },
     {
         "nome": "iShares Global Aerospace",
-        "ticker": "DFND",
+        "ticker": "DFND.Mi",
         "categoria": "ETF",
         "quantita": 114.0,
         "prezzo_fisso": None,
@@ -94,7 +94,7 @@ posizioni = [
     },
     {
         "nome": "iShares Edge MSCI World",
-        "ticker": "IWVL",
+        "ticker": "IWVL.AS",
         "categoria": "ETF",
         "quantita": 8.0,
         "prezzo_fisso": None,
@@ -103,7 +103,7 @@ posizioni = [
     },
     {
         "nome": "iShares MSCI World",
-        "ticker": "IWRD",
+        "ticker": "IWRD.MI",
         "categoria": "ETF",
         "quantita": 5.0,
         "prezzo_fisso": None,
@@ -112,7 +112,7 @@ posizioni = [
     },
     {
         "nome": "Xtrackers MSCI Emerging Markets",
-        "ticker": "XMME",
+        "ticker": "XMME.MI",
         "categoria": "ETF",
         "quantita": 12.0,
         "prezzo_fisso": None,
